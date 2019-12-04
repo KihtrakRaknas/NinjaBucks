@@ -33,7 +33,7 @@
 
       function updateWName(name,old){
         var newVal = prompt("newValue?\nOld NB: "+old)
-        if(Number(newVal) == null){
+        if(Number(newVal) != null){
           newVal = Number(newVal)
           firebase.database().ref().update({
             [name]:newVal
