@@ -42,7 +42,7 @@
             var newVal = document.getElementById("nbInput").value;
             if(newVal!=""&&Number(newVal) != null){
                 newVal=Number(newVal)
-                newVal+=1
+                newVal+=100
             }
             updateWval(newVal,name)
         }
@@ -54,7 +54,7 @@
             if(newVal!=""&&Number(newVal) != null){
                 console.log("sub")
                 newVal=Number(newVal)
-                newVal-=1
+                newVal-=100
                 console.log(newVal)
             }
             updateWval(newVal,name)
