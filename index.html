@@ -31,22 +31,59 @@
 
       var database = firebase.database();
 
-      function updateWName(name,old){
-        var newVal = prompt("newValue?\nOld NB: "+old)
-        if(Number(newVal) != null){
-          newVal = Number(newVal)
-          firebase.database().ref().update({
-            [name]:newVal
-          })
-        }
+      function updateWName(){
+        var name = document.getElementById("nbName").innerText;
+        var newVal = document.getElementById("nbInput").value;
+        updateWval(newVal,name)
       }
+        
+        function add(){
+            var name = document.getElementById("nbName").innerText;
+            var newVal = document.getElementById("nbInput").value;
+            if(newVal!=""&&Number(newVal) != null){
+                newVal=Number(newVal)
+                newVal+=1
+            }
+            updateWval(newVal,name)
+        }
+        
+        function sub(){
+            var name = document.getElementById("nbName").innerText;
+            var newVal = document.getElementById("nbInput").value;
+            console.log("sub")
+            if(newVal!=""&&Number(newVal) != null){
+                console.log("sub")
+                newVal=Number(newVal)
+                newVal-=1
+                console.log(newVal)
+            }
+            updateWval(newVal,name)
+        }
+        
+        function updateWval(newVal, name){
+            console.log(newVal)
+            if(newVal!==""&&Number(newVal) != null){
+              newVal = Number(newVal)
+                console.log(newVal)
+              firebase.database().ref().update({
+                [name]:newVal
+              })
+            }
+            $('#myModal').modal('hide')
+        }
+        
+        function showModal(name,old){
+            document.getElementById("nbInput").value = old;
+            document.getElementById("nbName").innerText = name;
+            $('#myModal').modal('show')
+        }
 
       firebase.database().ref().on('value', function(snapshot) {
         var table = document.getElementById("ninjas");
         table.innerHTML = "";
         for(nin in snapshot.val()){
         table.innerHTML+=`
-         <tr onclick="updateWName('`+nin+`', `+snapshot.val()[nin]+`)">
+         <tr onclick="showModal('`+nin+`', `+snapshot.val()[nin]+`)">
               <th scope="row">`+nin+`</th>
               <td>`+snapshot.val()[nin]+`</td>
             </tr>
@@ -69,6 +106,28 @@
           </tbody>
         </table>
         </div>
+      
+      <div class="modal" tabindex="-1" role="dialog" id="myModal">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="nbName">Modal title</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body" style="display: flex;  align-items: center; justify-content: center;">
+                  <button type="button" class="btn btn-outline-success" style="margin-bottom: 2px" class="text-center" onClick="add()">+</button><input type="text" class="form-control" id="nbInput" style="margin-bottom: 2px"/><button type="button" class="btn btn-outline-danger" onClick="sub()">-</button>
+                
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-primary" onClick="updateWName()">Save changes</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      
     <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
