@@ -61,13 +61,22 @@
         }
         
         function updateWval(newVal, name){
-            console.log(newVal)
-            if(newVal!==""&&Number(newVal) != null){
-              newVal = Number(newVal)
-                console.log(newVal)
-              firebase.database().ref().update({
-                [name]:newVal
-              })
+            var auth = window.localStorage.getItem('auth');
+            if(auth == "true"){
+              console.log(newVal)
+              if(newVal!==""&&Number(newVal) != null){
+                newVal = Number(newVal)
+                  console.log(newVal)
+                firebase.database().ref().update({
+                  [name]:newVal
+                })
+              }
+            }else{
+              var authKey = prompt("Enter Password")
+              if(authKey == "h@nds@nitizer"){
+                  window.localStorage.setItem('auth',"true")
+                  updateWval(newVal, name)
+              }
             }
             $('#myModal').modal('hide')
         }
