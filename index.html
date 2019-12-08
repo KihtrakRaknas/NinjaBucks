@@ -87,21 +87,28 @@
             $('#myModal').modal('show')
         }
 
-      firebase.database().ref().on('value', function(snapshot) {
-        var table = document.getElementById("ninjas");
-        table.innerHTML = "";
-        for(nin in snapshot.val()){
-        table.innerHTML+=`
-         <tr onclick="showModal('`+nin+`', `+snapshot.val()[nin]+`)">
-              <th scope="row">`+nin+`</th>
-              <td>`+snapshot.val()[nin]+`</td>
-            </tr>
-        `
+        var globalUsers = {};
+        function updateTable(obj){
+            var table = document.getElementById("ninjas");
+            table.innerHTML = "";
+            for(nin in obj){
+                table.innerHTML+=`
+                 <tr onclick="showModal('`+nin+`', `+obj[nin]+`)">
+                      <th scope="row">`+nin+`</th>
+                      <td>`+obj[nin]+`</td>
+                    </tr>
+                `
+            }
         }
-});
+        
+      firebase.database().ref().on('value', function(snapshot) {
+          globalUsers = snapshot.val()
+          updateTable(snapshot.val())
+      });
     </script>
   </head>
-  <body>
+  <body style="background-color: black">
+      <input id="search" style="margin-top:3px;margin-bottom:10px;"type="text" class="form-control" placeholder="Search" aria-label="Search">
       <div>
         <table class="table table-dark">
           <thead>
@@ -140,5 +147,20 @@
     <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+      
+      <script>
+        document.getElementById('search').addEventListener('input', function(){
+            if(document.getElementById('search').value == ""){
+                updateTable(globalUsers);
+            }else{
+                var newList = {};
+                for(nin in globalUsers){
+                    if(nin.toLocaleLowerCase().includes(document.getElementById('search').value.toLocaleLowerCase()))
+                        newList[nin] = globalUsers[nin]
+                }
+                updateTable(newList);
+            }
+        });
+      </script>
   </body>
 </html>
