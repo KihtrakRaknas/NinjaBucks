@@ -1,10 +1,18 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <meta charset="utf-8">
+    <meta charset="utf-8" />
     <title>Ninja Bucks</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+      integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
+      crossorigin="anonymous"
+    />
     <!-- The core Firebase JS SDK is always required and must be listed first -->
     <script src="https://www.gstatic.com/firebasejs/7.5.0/firebase-app.js"></script>
 
@@ -31,136 +39,242 @@
 
       var database = firebase.database();
 
-      function updateWName(){
+      function updateWName() {
         var name = document.getElementById("nbName").innerText;
         var newVal = document.getElementById("nbInput").value;
-        updateWval(newVal,name)
+        updateWval(newVal, name);
       }
-        
-        function add(){
-            var name = document.getElementById("nbName").innerText;
-            var newVal = document.getElementById("nbInput").value;
-            if(newVal!=""&&Number(newVal) != null){
-                newVal=Number(newVal)
-                newVal+=10
-            }
-            updateWval(newVal,name)
-        }
-        
-        function sub(){
-            var name = document.getElementById("nbName").innerText;
-            var newVal = document.getElementById("nbInput").value;
-            console.log("sub")
-            if(newVal!=""&&Number(newVal) != null){
-                console.log("sub")
-                newVal=Number(newVal)
-                newVal-=10
-                console.log(newVal)
-            }
-            updateWval(newVal,name)
-        }
-        
-        function updateWval(newVal, name){
-            var auth = window.localStorage.getItem('auth');
-            if(auth == "true"){
-              console.log(newVal)
-              if(newVal!==""&&Number(newVal) != null){
-                newVal = Number(newVal)
-                  console.log(newVal)
-                firebase.database().ref().update({
-                  [name]:newVal
-                })
-              }
-            }else{
-              var authKey = prompt("Enter Password")
-              if(authKey == "h@nds@nitizer"){
-                  window.localStorage.setItem('auth',"true")
-                  updateWval(newVal, name)
-              }
-            }
-            $('#myModal').modal('hide')
-        }
-        
-        function showModal(name,old){
-            document.getElementById("nbInput").value = old;
-            document.getElementById("nbName").innerText = name;
-            $('#myModal').modal('show')
-        }
 
-        var globalUsers = {};
-        function updateTable(obj){
-            var table = document.getElementById("ninjas");
-            table.innerHTML = "";
-            for(nin in obj){
-                table.innerHTML+=`
-                 <tr onclick="showModal('`+nin+`', `+obj[nin]+`)">
-                      <th scope="row">`+nin+`</th>
-                      <td>`+obj[nin]+`</td>
-                    </tr>
-                `
-            }
+      function add() {
+        var name = document.getElementById("nbName").innerText;
+        var newVal = document.getElementById("nbInput").value;
+        if (newVal != "" && Number(newVal) != null) {
+          newVal = Number(newVal);
+          newVal += 10;
         }
-        
-      firebase.database().ref().on('value', function(snapshot) {
-          globalUsers = snapshot.val()
-          updateTable(snapshot.val())
-      });
+        updateWval(newVal, name);
+      }
+
+      function sub() {
+        var name = document.getElementById("nbName").innerText;
+        var newVal = document.getElementById("nbInput").value;
+        console.log("sub");
+        if (newVal != "" && Number(newVal) != null) {
+          console.log("sub");
+          newVal = Number(newVal);
+          newVal -= 10;
+          console.log(newVal);
+        }
+        updateWval(newVal, name);
+      }
+
+      function updateWval(newVal, name) {
+        var auth = window.localStorage.getItem("auth");
+        if (auth == "true") {
+          console.log(newVal);
+          if (newVal !== "" && Number(newVal) != null) {
+            newVal = Number(newVal);
+            console.log(newVal);
+            firebase
+              .database()
+              .ref()
+              .update({
+                [name]: newVal
+              })
+              .then(() => {
+                if (shouldClose) window.close();
+              });
+          }
+        } else {
+          var authKey = prompt("Enter Password"); // IK this is super insecure but in this instance security theatre is all thats necessary
+          if (authKey == "h@nds@nitizer") {
+            window.localStorage.setItem("auth", "true");
+            updateWval(newVal, name);
+          }
+        }
+        $("#myModal").modal("hide");
+      }
+
+      function showModal(name, old) {
+        document.getElementById("nbInput").value = old;
+        document.getElementById("nbName").innerText = name;
+        $("#myModal").modal("show");
+      }
+
+      var globalUsers = {};
+      function updateTable(obj) {
+        var table = document.getElementById("ninjas");
+        table.innerHTML = "";
+        for (nin in obj) {
+          table.innerHTML +=
+            `
+                 <tr onclick="showModal('` +
+            nin +
+            `', ` +
+            obj[nin] +
+            `)">
+                      <th scope="row">` +
+            nin +
+            `</th>
+                      <td>` +
+            obj[nin] +
+            `</td>
+                    </tr>
+                `;
+        }
+      }
+
+      firebase
+        .database()
+        .ref()
+        .on("value", function(snapshot) {
+          globalUsers = snapshot.val();
+          updateTable(snapshot.val());
+        });
     </script>
   </head>
   <body style="background-color: black">
-      <input id="search" style="margin-top:3px;margin-bottom:10px;"type="text" class="form-control" placeholder="Search" aria-label="Search">
-      <div>
-        <table class="table table-dark">
-          <thead>
-            <tr>
-              <th scope="col">Name</th>
-              <th scope="col">Ninja Bucks</th>
-            </tr>
-          </thead>
-          <tbody id="ninjas">
+    <input
+      id="search"
+      style="margin-top:3px;margin-bottom:10px;"
+      type="text"
+      class="form-control"
+      placeholder="Search"
+      aria-label="Search"
+    />
+    <div>
+      <table class="table table-dark">
+        <thead>
+          <tr>
+            <th scope="col">Name</th>
+            <th scope="col">Ninja Bucks</th>
+          </tr>
+        </thead>
+        <tbody id="ninjas"></tbody>
+      </table>
+    </div>
 
-          </tbody>
-        </table>
-        </div>
-      
-      <div class="modal" tabindex="-1" role="dialog" id="myModal">
-          <div class="modal-dialog" role="document">
-            <div class="modal-content">
-              <div class="modal-header">
-                <h5 class="modal-title" id="nbName">Modal title</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                  <span aria-hidden="true">&times;</span>
-                </button>
-              </div>
-              <div class="modal-body" style="display: flex;  align-items: center; justify-content: center;">
-                  <button type="button" class="btn btn-outline-success" style="margin-bottom: 2px" class="text-center" onClick="add()">+</button><input type="text" class="form-control" id="nbInput" style="margin-bottom: 2px"/><button type="button" class="btn btn-outline-danger" onClick="sub()">-</button>
-                
-              </div>
-              <div class="modal-footer">
-                <button type="button" class="btn btn-primary" onClick="updateWName()">Save changes</button>
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-              </div>
-            </div>
+    <div class="modal" tabindex="-1" role="dialog" id="myModal">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="nbName">Modal title</h5>
+            <button
+              type="button"
+              class="close"
+              data-dismiss="modal"
+              aria-label="Close"
+            >
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div
+            class="modal-body"
+            style="display: flex;  align-items: center; justify-content: center;"
+          >
+            <button
+              type="button"
+              class="btn btn-outline-success"
+              style="margin-bottom: 2px"
+              class="text-center"
+              onClick="add()"
+            >
+              +</button
+            ><input
+              type="text"
+              class="form-control"
+              id="nbInput"
+              style="margin-bottom: 2px"
+            /><button
+              type="button"
+              class="btn btn-outline-danger"
+              onClick="sub()"
+            >
+              -
+            </button>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-primary"
+              onClick="updateWName()"
+            >
+              Save changes
+            </button>
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-dismiss="modal"
+            >
+              Close
+            </button>
           </div>
         </div>
-      
-    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
-      
-      <script>
-        document.getElementById('search').addEventListener('input', function(){
-            if(document.getElementById('search').value == ""){
-                updateTable(globalUsers);
-            }else{
-                var newList = {};
-                for(nin in globalUsers){
-                    if(nin.toLocaleLowerCase().includes(document.getElementById('search').value.toLocaleLowerCase()))
-                        newList[nin] = globalUsers[nin]
-                }
-                updateTable(newList);
-            }
-        });
-      </script>
+      </div>
+    </div>
+
+    <script
+      src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+      integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+      integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+      integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+      crossorigin="anonymous"
+    ></script>
+
+    <script>
+      function getUrlVars() {
+        var vars = {};
+        var parts = window.location.href.replace(
+          /[?&]+([^=&]+)=([^&]*)/gi,
+          function(m, key, value) {
+            vars[key] = value;
+          }
+        );
+        return vars;
+      }
+      if (getUrlVars()["name"] && getUrlVars()["number"])
+        firebase
+          .database()
+          .ref()
+          .on("value", function(snapshot) {
+            var name = decodeURIComponent(snapshot.val()[getUrlVars()["name"]]);
+            if (name) {
+              var newVal = 0;
+              if (Number(snapshot.val()[name]))
+                newVal = Number(snapshot.val()[name]);
+              if (Number(getUrlVars()["number"]))
+                newVal += Number(getUrlVars()["number"]);
+              var shouldClose = true;
+              updateWval(newVal, name);
+            } else alert("Name not found: " + name);
+          });
+      else console.log("No Params");
+      document.getElementById("search").addEventListener("input", function() {
+        if (document.getElementById("search").value == "") {
+          updateTable(globalUsers);
+        } else {
+          var newList = {};
+          for (nin in globalUsers) {
+            if (
+              nin
+                .toLocaleLowerCase()
+                .includes(
+                  document.getElementById("search").value.toLocaleLowerCase()
+                )
+            )
+              newList[nin] = globalUsers[nin];
+          }
+          updateTable(newList);
+        }
+      });
+    </script>
   </body>
 </html>
