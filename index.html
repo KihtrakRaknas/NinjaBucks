@@ -240,19 +240,22 @@
         );
         return vars;
       }
+      var shouldClose = false;
       if (getUrlVars()["name"] && getUrlVars()["number"])
         firebase
           .database()
           .ref()
           .once("value", function(snapshot) {
-            var name = decodeURIComponent(snapshot.val()[getUrlVars()["name"]]);
+            var name = decodeURIComponent(getUrlVars()["name"]);
             if (name) {
               var newVal = 0;
               if (Number(snapshot.val()[name]))
                 newVal = Number(snapshot.val()[name]);
               if (Number(getUrlVars()["number"]))
                 newVal += Number(getUrlVars()["number"]);
-              var shouldClose = true;
+              shouldClose = true;
+              console.log(name);
+              console.log(newVal);
               updateWval(newVal, name);
             } else alert("Name not found: " + name);
           });
