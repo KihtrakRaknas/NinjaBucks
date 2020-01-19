@@ -38,99 +38,6 @@
       firebase.analytics();
 
       var database = firebase.database();
-
-      function updateWName() {
-        var name = document.getElementById("nbName").innerText;
-        var newVal = document.getElementById("nbInput").value;
-        updateWval(newVal, name);
-      }
-
-      function add() {
-        var name = document.getElementById("nbName").innerText;
-        var newVal = document.getElementById("nbInput").value;
-        if (newVal != "" && Number(newVal) != null) {
-          newVal = Number(newVal);
-          newVal += 10;
-        }
-        updateWval(newVal, name);
-      }
-
-      function sub() {
-        var name = document.getElementById("nbName").innerText;
-        var newVal = document.getElementById("nbInput").value;
-        console.log("sub");
-        if (newVal != "" && Number(newVal) != null) {
-          console.log("sub");
-          newVal = Number(newVal);
-          newVal -= 10;
-          console.log(newVal);
-        }
-        updateWval(newVal, name);
-      }
-
-      function updateWval(newVal, name) {
-        var auth = window.localStorage.getItem("auth");
-        if (auth == "true") {
-          console.log(newVal);
-          if (newVal !== "" && Number(newVal) != null) {
-            newVal = Number(newVal);
-            console.log(newVal);
-            firebase
-              .database()
-              .ref()
-              .update({
-                [name]: newVal
-              })
-              .then(() => {
-                if (shouldClose) window.close();
-              });
-          }
-        } else {
-          var authKey = prompt("Enter Password"); // IK this is super insecure but in this instance security theatre is all thats necessary
-          if (authKey == "h@nds@nitizer") {
-            window.localStorage.setItem("auth", "true");
-            updateWval(newVal, name);
-          }
-        }
-        $("#myModal").modal("hide");
-      }
-
-      function showModal(name, old) {
-        document.getElementById("nbInput").value = old;
-        document.getElementById("nbName").innerText = name;
-        $("#myModal").modal("show");
-      }
-
-      var globalUsers = {};
-      function updateTable(obj) {
-        var table = document.getElementById("ninjas");
-        table.innerHTML = "";
-        for (nin in obj) {
-          table.innerHTML +=
-            `
-                 <tr onclick="showModal('` +
-            nin +
-            `', ` +
-            obj[nin] +
-            `)">
-                      <th scope="row">` +
-            nin +
-            `</th>
-                      <td>` +
-            obj[nin] +
-            `</td>
-                    </tr>
-                `;
-        }
-      }
-
-      firebase
-        .database()
-        .ref()
-        .on("value", function(snapshot) {
-          globalUsers = snapshot.val();
-          updateTable(snapshot.val());
-        });
     </script>
   </head>
   <body style="background-color: black">
@@ -240,11 +147,16 @@
         );
         return vars;
       }
+
+      var CNcenter = 'cn-nj-kendall-park'
+      if(getUrlVars()["center"])
+        CNcenter = getUrlVars()["center"]
+      
       var shouldClose = false;
       if (getUrlVars()["name"] && getUrlVars()["number"])
         firebase
           .database()
-          .ref()
+          .ref(CNcenter)
           .once("value", function(snapshot) {
             var name = decodeURIComponent(getUrlVars()["name"]);
             if (name) {
@@ -278,6 +190,105 @@
           updateTable(newList);
         }
       });
+
+
+
+
+
+
+      function updateWName() {
+        var name = document.getElementById("nbName").innerText;
+        var newVal = document.getElementById("nbInput").value;
+        updateWval(newVal, name);
+      }
+
+      function add() {
+        var name = document.getElementById("nbName").innerText;
+        var newVal = document.getElementById("nbInput").value;
+        if (newVal != "" && Number(newVal) != null) {
+          newVal = Number(newVal);
+          newVal += 10;
+        }
+        updateWval(newVal, name);
+      }
+
+      function sub() {
+        var name = document.getElementById("nbName").innerText;
+        var newVal = document.getElementById("nbInput").value;
+        console.log("sub");
+        if (newVal != "" && Number(newVal) != null) {
+          console.log("sub");
+          newVal = Number(newVal);
+          newVal -= 10;
+          console.log(newVal);
+        }
+        updateWval(newVal, name);
+      }
+
+      function updateWval(newVal, name) {
+        var auth = window.localStorage.getItem("auth");
+        if (auth == "true") {
+          console.log(newVal);
+          if (newVal !== "" && Number(newVal) != null) {
+            newVal = Number(newVal);
+            console.log(newVal);
+            firebase
+              .database()
+              .ref(CNcenter)
+              .update({
+                [name]: newVal
+              })
+              .then(() => {
+                if (shouldClose) window.close();
+              });
+          }
+        } else {
+          var authKey = prompt("Enter Password"); // IK this is super insecure but in this instance security theatre is all thats necessary
+          if (authKey == "h@nds@nitizer") {
+            window.localStorage.setItem("auth", "true");
+            updateWval(newVal, name);
+          }
+        }
+        $("#myModal").modal("hide");
+      }
+
+      function showModal(name, old) {
+        document.getElementById("nbInput").value = old;
+        document.getElementById("nbName").innerText = name;
+        $("#myModal").modal("show");
+      }
+
+      var globalUsers = {};
+      function updateTable(obj) {
+        var table = document.getElementById("ninjas");
+        table.innerHTML = "";
+        for (nin in obj) {
+          table.innerHTML +=
+            `
+                 <tr onclick="showModal('` +
+            nin +
+            `', ` +
+            obj[nin] +
+            `)">
+                      <th scope="row">` +
+            nin +
+            `</th>
+                      <td>` +
+            obj[nin] +
+            `</td>
+                    </tr>
+                `;
+        }
+      }
+
+      firebase
+        .database()
+        .ref(CNcenter)
+        .on("value", function(snapshot) {
+          globalUsers = snapshot.val();
+          updateTable(snapshot.val());
+        });
+
     </script>
   </body>
 </html>
