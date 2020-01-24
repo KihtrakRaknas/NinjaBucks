@@ -180,6 +180,7 @@
           updateTable(globalUsers);
         }else if(document.getElementById("search").value == "reset"){
           window.localStorage.clear();
+          alert("RESET")
         }else {
           var newList = {};
           for (nin in globalUsers) {
