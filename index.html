@@ -86,8 +86,8 @@
               });
           }
         } else {
-          var authKey = prompt("Enter Password"); // IK this is super insecure but in this instance security theatre is all thats necessary
-          if (authKey == "h@nds@nitizer") {
+          var authKey = req() // IK this is super insecure but in this instance security theatre is all thats necessary
+          if (authKey == atob("aEBuZHNAbml0aXplcg==")) {
             window.localStorage.setItem("auth", "true");
             updateWval(newVal, name);
           }
@@ -230,6 +230,9 @@
     ></script>
 
     <script>
+      function req(){
+        return prompt("Enter Password");
+      }
       function getUrlVars() {
         var vars = {};
         var parts = window.location.href.replace(
@@ -263,7 +266,9 @@
       document.getElementById("search").addEventListener("input", function() {
         if (document.getElementById("search").value == "") {
           updateTable(globalUsers);
-        } else {
+        }else if(document.getElementById("search").value == "reset"){
+          window.localStorage.clear();
+        }else {
           var newList = {};
           for (nin in globalUsers) {
             if (
