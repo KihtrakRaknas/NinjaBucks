@@ -137,7 +137,7 @@
     ></script>
 
     <script>
-      function req(){
+      function req() {
         return prompt("Enter Password");
       }
       function getUrlVars() {
@@ -151,10 +151,9 @@
         return vars;
       }
 
-      var CNcenter = 'cn-nj-kendall-park'
-      if(getUrlVars()["center"])
-        CNcenter = getUrlVars()["center"]
-      
+      var CNcenter = "cn-nj-kendall-park";
+      if (getUrlVars()["center"]) CNcenter = getUrlVars()["center"];
+
       var shouldClose = false;
       if (getUrlVars()["name"] && getUrlVars()["number"])
         firebase
@@ -178,10 +177,23 @@
       document.getElementById("search").addEventListener("input", function() {
         if (document.getElementById("search").value == "") {
           updateTable(globalUsers);
-        }else if(document.getElementById("search").value == "reset"){
+        } else if (document.getElementById("search").value == "reset") {
           window.localStorage.clear();
-          alert("RESET")
-        }else {
+          alert("RESET");
+        } else if (document.getElementById("search").value == "pop") {
+          var auth = window.localStorage.getItem("auth");
+          if (auth == "true") {
+            updatePopUp();
+          } else {
+            var authKey = prompt("Enter Password"); // IK this is super insecure but in this instance security theatre is all thats necessary
+            if (authKey == atob("aEBuZHNAbml0aXplcg==")) {
+              window.localStorage.setItem("auth", "true");
+              updatePopUp();
+            } else {
+              alert("Wrong Password");
+            }
+          }
+        } else {
           var newList = {};
           for (nin in globalUsers) {
             if (
@@ -196,11 +208,6 @@
           updateTable(newList);
         }
       });
-
-
-
-
-
 
       function updateWName() {
         var name = document.getElementById("nbName").innerText;
@@ -250,12 +257,43 @@
           }
         } else {
           var authKey = prompt("Enter Password"); // IK this is super insecure but in this instance security theatre is all thats necessary
-          if (authKey == "h@nds@nitizer") {
+          if (authKey == atob("aEBuZHNAbml0aXplcg==")) {
             window.localStorage.setItem("auth", "true");
             updateWval(newVal, name);
           }
         }
         $("#myModal").modal("hide");
+      }
+
+      function updatePopUp() {
+        var newURL = prompt("new URL? (Type nothing to leave it unchanged)");
+        if (newURL)
+          firebase
+            .database()
+            .ref("pop")
+            .update({
+              url: newURL
+            });
+        var newURL = prompt(
+          "Time between pop ups? (Type nothing to leave it unchanged)"
+        );
+        if (newURL)
+          firebase
+            .database()
+            .ref("pop")
+            .update({
+              interval: newURL
+            });
+        var newURL = prompt(
+          "Duration of pop up? (Type nothing to leave it unchanged)"
+        );
+        if (newURL)
+          firebase
+            .database()
+            .ref("pop")
+            .update({
+              showTime: newURL
+            });
       }
 
       function showModal(name, old) {
@@ -294,7 +332,6 @@
           globalUsers = snapshot.val();
           updateTable(snapshot.val());
         });
-
     </script>
   </body>
 </html>
