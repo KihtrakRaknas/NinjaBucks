@@ -77,28 +77,36 @@
           </div>
           <div
             class="modal-body"
-            style="display: flex;  align-items: center; justify-content: center;"
           >
-            <button
-              type="button"
-              class="btn btn-outline-success"
-              style="margin-bottom: 2px"
-              class="text-center"
-              onClick="add()"
-            >
-              +</button
-            ><input
-              type="text"
-              class="form-control"
-              id="nbInput"
-              style="margin-bottom: 2px"
-            /><button
-              type="button"
-              class="btn btn-outline-danger"
-              onClick="sub()"
-            >
-              -
-            </button>
+            <div style="display: flex;  align-items: center; justify-content: center;">
+                <button
+                  type="button"
+                  class="btn btn-outline-success"
+                  style="margin-bottom: 2px"
+                  class="text-center"
+                  onClick="add()"
+                >
+                  +</button
+                ><input
+                  type="text"
+                  class="form-control"
+                  id="nbInput"
+                  style="margin-bottom: 2px"
+                /><button
+                  type="button"
+                  class="btn btn-outline-danger"
+                  onClick="sub()"
+                >
+                  -
+                </button>
+            </div>
+            <input
+                  type="text"
+                  class="form-control"
+                  placeholder="Add (Optional)"
+                  id="nbAdd"
+                  style="margin-bottom: 2px"
+                />
           </div>
           <div class="modal-footer">
             <button
@@ -233,6 +241,11 @@
       function updateWName() {
         var name = document.getElementById("nbName").innerText;
         var newVal = document.getElementById("nbInput").value;
+        var add = document.getElementById("nbAdd").value;
+        if(add){
+          newVal = Number(newVal)
+          newVal += Number(add)
+        }
         updateWval(newVal, name);
       }
 
@@ -330,6 +343,7 @@
         document.getElementById("nbInput").value = old;
         document.getElementById("nbName").innerText = name;
         document.getElementById("nbCenter").innerText = ""
+        document.getElementById("nbAdd").value = "";
         $("#myModal").modal("show");
       }
 
