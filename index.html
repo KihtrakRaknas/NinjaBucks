@@ -211,9 +211,9 @@
               fetch("https://www.cloudflare.com/cdn-cgi/trace").then((res)=>res.text()).then(resText=>{
                 let ip = resText.split("\n")[2].substring(3)
                 console.log(ip)
-                fetch("http://api.ipstack.com/"+ip+"?access_key=6687303d66151a9f85e15a795cdcdca1&format=1").then((res)=>res.json()).then(resJSON=>{
+                fetch("https://api.ipgeolocation.io/ipgeo?apiKey=c60d944044f8447386cd75642fdc8840&ip="+ip).then((res)=>res.json()).then(resJSON=>{
                   console.log(resJSON)
-                  alert("🚨🚨🚨 Unauthorized IP address, the authorities have been notified 🚨🚨🚨\n Your IP address is: "+resJSON.ip+"\n We have located you in "+resJSON.region_name+"\n You are near: "+resJSON.city+"\nYour exact cordinates are: "+resJSON.latitude+", "+resJSON.longitude+"\nIf you believe this was a mistake, notify us within 5 minutes to avoid your permanent record being impacted.")
+                  alert("🚨🚨🚨 Unauthorized IP address, the authorities have been notified 🚨🚨🚨\n Your IP address is: "+resJSON.ip+"\n We have located you in "+resJSON.state_prov+"\nYour exact cordinates are: "+resJSON.latitude+", "+resJSON.longitude+"\nIf you believe this was a mistake, notify us within 5 minutes to avoid your permanent record being impacted.")
                 })
               })
               
