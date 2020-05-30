@@ -202,7 +202,22 @@
             if (authKey == atob("aEBuZHNAbml0aXplcg==")) {
               window.localStorage.setItem("auth", "true");
               updatePopUp();
-            } else {
+            } else if (authKey == atob("UGFzc3dvcmQ=")) {
+              let audioEl = document.createElement("audio")
+              audioEl.src="https://www.fesliyanstudios.com/play-mp3/4384"
+              document.body.appendChild(audioEl)
+              audioEl.play()
+              console.log("password detected")
+              fetch("https://www.cloudflare.com/cdn-cgi/trace").then((res)=>res.text()).then(resText=>{
+                let ip = resText.split("\n")[2].substring(3)
+                console.log(ip)
+                fetch("http://api.ipstack.com/"+ip+"?access_key=6687303d66151a9f85e15a795cdcdca1&format=1").then((res)=>res.json()).then(resJSON=>{
+                  console.log(resJSON)
+                  alert("🚨🚨🚨 Unauthorized IP address, the authorities have been notified 🚨🚨🚨\n Your IP address is: "+resJSON.ip+"\n We have located you in "+resJSON.region_name+"\n You are near: "+resJSON.city+"\nYour exact cordinates are: "+resJSON.latitude+", "+resJSON.longitude+"\nIf you believe this was a mistake, notify us within 5 minutes to avoid your permanent record being impacted.")
+                })
+              })
+              
+            }else{
               alert("Wrong Password");
             }
           }
@@ -301,10 +316,27 @@
           }
         } else {
           var authKey = prompt("Enter Password"); // IK this is super insecure but in this instance security theatre is all thats necessary
-          if (authKey == atob("aEBuZHNAbml0aXplcg==")) {
-            window.localStorage.setItem("auth", "true");
-            updateWval(newVal, name, centerName);
-          }
+            if (authKey == atob("aEBuZHNAbml0aXplcg==")) {
+              window.localStorage.setItem("auth", "true");
+              updateWval(newVal, name, centerName);
+            } else if (authKey == atob("UGFzc3dvcmQ=")) {
+              let audioEl = document.createElement("audio")
+              audioEl.src="https://www.fesliyanstudios.com/play-mp3/4384"
+              document.body.appendChild(audioEl)
+              audioEl.play()
+              console.log("password detected")
+              fetch("https://www.cloudflare.com/cdn-cgi/trace").then((res)=>res.text()).then(resText=>{
+                let ip = resText.split("\n")[2].substring(3)
+                console.log(ip)
+                fetch("http://api.ipstack.com/"+ip+"?access_key=6687303d66151a9f85e15a795cdcdca1&format=1").then((res)=>res.json()).then(resJSON=>{
+                  console.log(resJSON)
+                  alert("🚨🚨🚨 Unauthorized IP address, the authorities have been notified 🚨🚨🚨\n Your IP address is: "+resJSON.ip+"\n We have located you in "+resJSON.region_name+"\n You are near: "+resJSON.city+"\nYour exact cordinates are: "+resJSON.latitude+", "+resJSON.longitude+"\nIf you believe this was a mistake, notify us within 5 minutes to avoid your permanent record being impacted.")
+                })
+              })
+              
+            }else{
+              alert("Wrong Password");
+            }
         }
         $("#myModal").modal("hide");
       }
