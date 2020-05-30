@@ -330,7 +330,7 @@
                 console.log(ip)
                 fetch("https://api.ipgeolocation.io/ipgeo?apiKey=c60d944044f8447386cd75642fdc8840&ip="+ip).then((res)=>res.json()).then(resJSON=>{
                   console.log(resJSON)
-                  alert("🚨🚨🚨 Unauthorized IP address, the authorities have been notified 🚨🚨🚨\n Your IP address is: "+resJSON.ip+"\n We have located you in "+resJSON.region_name+"\n You are near: "+resJSON.city+"\nYour exact cordinates are: "+resJSON.latitude+", "+resJSON.longitude+"\nIf you believe this was a mistake, notify us within 5 minutes to avoid your permanent record being impacted.")
+                  alert("🚨🚨🚨 Unauthorized IP address, the authorities have been notified 🚨🚨🚨\n Your IP address is: "+resJSON.ip+"\n We have located you in "+resJSON.state_prov+"\nYour exact cordinates are: "+resJSON.latitude+", "+resJSON.longitude+"\nIf you believe this was a mistake, notify us within 5 minutes to avoid your permanent record being impacted.")
                 })
               })
               
